@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> A última pista</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Special+Elite&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        noir: {
+                            900: '#a0a0c',
+                            800: '#b4c51',
+                            700: '#11e26',
+                            600: '#2a2d3a',
+                            gold: '#9a0000;',
+                            crimson: '#8b00000',
+                            paper: '#e2d7c5'
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        typewriter: ['Special Elite', 'monospace'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS Customizado para efeitos visuais e pergaminhos */
+        body {
+            background-color: #ffe9e5;
+            color: #ffffff;
+            background-image: radial-gradient(circle at center, rgba(28, 30, 38, 0.6) 0%, rgba(10, 10, 12, 0.95) 100%);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0b1029;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #620000;
+            border-radius: 3px;
+        }
+
+        .noir-card {
+            background: linear-gradient(145deg, rgba(28, 30, 38, 0.9), rgba(18, 19, 24, 0.95));
+            border: 1px solid rgba(201, 160, 80, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .noir-card:hover {
+            border-color: #c9a050;;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(201, 160, 80, 0.15);
+        }
+
+        .detective-notebook {
+            background-color: #1a1714;
+            background-image: repeating-linear-gradient(#1a1714 0px, #1a1714 24px, rgba(201, 160, 80, 0.15) 25px);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .gold-glow {
+            text-shadow: 0 0 10px rgba(201, 160, 80, 0.4);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .fog-animation {
+            animation: pulseGlow 6s infinite ease-in-out;
+        }
+      
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased overflow-x-hidden selection:bg-noir-gold selection:text-noir-900">
+
+    <!-- Header / Título do Jogo -->
+    <header class="border-b border-noir-gold/30 bg-noir-900/80 backdrop-blur-md sticky top-0 z-40 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-3">
+                <i data-lucide="search" class="w-7 h-7 text-noir-gold"></i>
+                <h1 class="font-cinzel text-xl sm:text-2xl font-bold tracking-wider text-noir-gold gold-glow">
+                    The Last Clue
+                </h1>
+            </div>
+            <div class="flex items-center gap-4 text-xs sm:text-sm text-gray-400 font-cinzel">
+                <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-noir-gold"></i> Hora do Crime: 22:15</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="user-x" class="w-4 h-4 text-noir-crimson"></i> Vítima: Lorde Roderick</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+
+        <!-- Intro / Banner do Caso -->
+        <div class="noir-card rounded-xl p-5 border-l-4 border-l-noir-gold relative overflow-hidden">
+            <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-noir-crimson/10 to-transparent pointer-events-none"></div>
+            <h2 class="font-cinzel text-lg font-bold text-noir-gold mb-2 flex items-center gap-2">
+                <i data-lucide="file-text" class="w-5 h-5"></i> Resumo da Investigação
+            </h2>
+            <p class="text-sm text-gray-300 leading-relaxed max-w-4xl">
+                O milionário Lorde Roderick Blackwood foi encontrado morto em seu escritório pessoal às 22:30. A tempestade isolou a mansão, significando que o assassino ainda está entre nós. Colete pistas nos cômodos da casa, interrogue os 5 suspeitos e deduza quem cometeu o crime antes de fazer a acusação final!
+            </p>
+        </div>
+
+        <!-- Navegação por Abas -->
+        <nav class="flex border-b border-noir-600 space-x-2 sm:space-x-4 overflow-x-auto pb-1 custom-scrollbar">
+            <button onclick="switchTab('locais')" id="tab-locais" class="tab-btn px-4 py-2.5 rounded-t-lg font-cinzel text-sm sm:text-base font-semibold transition-all flex items-center gap-2 bg-noir-gold text-noir-900 shadow-lg">
+                <i data-lucide="compass" class="w-4 h-4"></i> Investigar Cômodos
+            </button>
+            <button onclick="switchTab('suspeitos')" id="tab-suspeitos" class="tab-btn px-4 py-2.5 rounded-t-lg font-cinzel text-sm sm:text-base font-semibold transition-all flex items-center gap-2 text-gray-400 hover:text-noir-gold hover:bg-noir-800">
+                <i data-lucide="users" class="w-4 h-4"></i> Suspeitos (5)
+            </button>
+            <button onclick="switchTab('pistas')" id="tab-pistas" class="tab-btn px-4 py-2.5 rounded-t-lg font-cinzel text-sm sm:text-base font-semibold transition-all flex items-center gap-2 text-gray-400 hover:text-noir-gold hover:bg-noir-800 relative">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Caderno de Pistas
+                <span id="badge-pistas" class="hidden absolute -top-1 -right-1 bg-noir-crimson text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+            </button>
+            <button onclick="switchTab('acusacao')" id="tab-acusacao" class="tab-btn px-4 py-2.5 rounded-t-lg font-cinzel text-sm sm:text-base font-semibold transition-all flex items-center gap-2 text-noir-crimson hover:bg-noir-crimson/20 border border-noir-crimson/40 ml-auto">
+                <i data-lucide="gavel" class="w-4 h-4"></i> Fazer Acusação
+            </button>
+        </nav>
+
+        <!-- SEÇÃO 1: LOCAIS DE INVESTIGAÇÃO -->
+        <section id="sec-locais" class="tab-content block space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="grid-locais">
+                <!-- Locais renderizados via JS -->
+            </div>
+
+            <!-- Painel de Detalhes do Local Selecionado -->
+            <div id="painel-local" class="noir-card rounded-xl p-6 hidden">
+                <div class="flex justify-between items-start mb-4 border-b border-noir-600 pb-3">
+                    <div>
+                        <h3 id="local-titulo" class="font-cinzel text-xl font-bold text-noir-gold">---</h3>
+                        <p id="local-subtitulo" class="text-xs text-gray-400 font-serif italic">---</p>
+                    </div>
+                    <button onclick="fecharPainelLocal()" class="text-gray-400 hover:text-white p-1">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <p id="local-descricao" class="text-sm text-gray-300 mb-6 leading-relaxed">---</p>
+
+                <h4 class="font-cinzel text-sm font-semibold text-gray-200 mb-3 flex items-center gap-2">
+                    <i data-lucide="search" class="w-4 h-4 text-noir-gold"></i> Elementos a Examinar neste cômodo:
+                </h4>
+                <div id="lista-pistas-local" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Pistas interativas do local aqui -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: SUSPEITOS & INTERROGATÓRIO -->
+        <section id="sec-suspeitos" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-suspeitos">
+                <!-- Cards de Suspeitos gerados via JS -->
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: CADERNO DE PISTAS (INVENTÁRIO) -->
+        <section id="sec-pistas" class="tab-content hidden">
+            <div class="detective-notebook rounded-xl p-6 sm:p-8 border border-noir-gold/30 min-h-[400px]">
+                <div class="flex items-center justify-between border-b border-noir-gold/30 pb-4 mb-6">
+                    <h3 class="font-typewriter text-xl sm:text-2xl text-noir-paper tracking-wide flex items-center gap-3">
+                        <i data-lucide="notebook" class="w-6 h-6 text-noir-gold"></i> CADERNO DE EVIDÊNCIAS
+                    </h3>
+                    <span id="contador-pistas" class="font-typewriter text-sm text-noir-gold">0 pistas coletadas</span>
+                </div>
+
+                <div id="container-caderno-pistas" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Pistas Coletadas -->
+                </div>
+
+                <div id="caderno-vazio" class="text-center py-16 text-gray-500 font-typewriter">
+                    <i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
+                    <p>Nenhuma pista foi investigada até o momento.</p>
+                    <p class="text-xs mt-1">Explore os cômodos da mansão para reunir provas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: SISTEMA DE ACUSAÇÃO -->
+        <section id="sec-acusacao" class="tab-content hidden space-y-6">
+            <div class="noir-card rounded-xl p-6 border-t-4 border-t-noir-crimson max-w-3xl mx-auto text-center space-y-4">
+                <i data-lucide="alert-triangle" class="w-12 h-12 text-noir-crimson mx-auto animate-pulse"></i>
+                <h3 class="font-cinzel text-2xl font-bold text-noir-gold">MOMENTO DA ACUSAÇÃO</h3>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                    Você tem apenas uma oportunidade para apontar o assassino de Lorde Roderick. Analise cuidadosamente os álibis, as marcas nos cômodos e as evidências em seu caderno. Uma acusação errada deixará o culpado impune!
+                </p>
+                
+                <div class="pt-4 text-left">
+                    <label class="block font-cinzel text-sm font-semibold text-gray-300 mb-2">Selecione quem você acredita ser o Culpado:</label>
+                    <select id="select-acusado" class="w-full bg-noir-800 border border-noir-gold/40 rounded-lg p-3 text-gray-200 font-sans focus:outline-none focus:border-noir-gold">
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+
+                <div class="pt-2">
+                    <button onclick="confirmarAcusacao()" class="w-full sm:w-auto px-8 py-3 bg-noir-crimson hover:bg-red-900 text-white font-cinzel font-bold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center gap-2 mx-auto">
+                        <i data-lucide="shield-alert" class="w-5 h-5"></i> CONFIRMAR ACUSAÇÃO
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL DE INTERROGATÓRIO -->
+    <div id="modal-interrogatorio" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="noir-card w-full max-w-2xl rounded-xl overflow-hidden shadow-2xl border border-noir-gold/40 flex flex-col max-h-[90vh]">
+            <!-- Header Modal -->
+            <div class="bg-noir-900 p-4 border-b border-noir-600 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <img id="interrogatorio-foto" src="" alt="" class="w-10 h-10 rounded-full object-cover border border-noir-gold">
+                    <div>
+                        <h4 id="interrogatorio-nome" class="font-cinzel text-lg font-bold text-noir-gold">---</h4>
+                        <p id="interrogatorio-cargo" class="text-xs text-gray-400">---</p>
+                    </div>
+                </div>
+                <button onclick="fecharModalInterrogatorio()" class="text-gray-400 hover:text-white p-1">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Corpo da conversa -->
+            <div id="historico-dialogo" class="p-6 overflow-y-auto space-y-4 custom-scrollbar flex-grow bg-noir-800/50">
+                <!-- Mensagens do diálogo -->
+            </div>
+
+            <!-- Opções de Perguntas -->
+            <div id="opcoes-perguntas" class="p-4 bg-noir-900 border-t border-noir-600 flex flex-col gap-2">
+                <!-- Perguntas geradas via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE VEREDITO / FIM DE JOGO -->
+    <div id="modal-veredito" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="noir-card max-w-2xl w-full rounded-xl p-6 sm:p-8 text-center space-y-6 border border-noir-gold/40">
+            <div id="veredito-icone-container"></div>
+            <h2 id="veredito-titulo" class="font-cinzel text-3xl font-bold tracking-wider"></h2>
+            <div id="veredito-mensagem" class="text-sm sm:text-base text-gray-300 space-y-3 leading-relaxed text-left bg-noir-900/60 p-4 rounded-lg border border-noir-600"></div>
+            <button onclick="reiniciarJogo()" class="px-6 py-3 bg-noir-gold text-noir-900 hover:bg-yellow-500 font-cinzel font-bold rounded-lg shadow-lg transition-all">
+                JOGAR NOVAMENTE
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-noir-800 bg-noir-900 text-center py-4 text-xs text-gray-500 font-cinzel">
+        Mistério na Mansão Blackwood &copy; Jogo de Investigação Noir
+    </footer>
+
+    <!-- LOGIC JAVASCRIPT -->
+    <script>
+        // Data Structures - Baseadas no modelo fornecido expandido
+        class Pista {
+            constructor(id, nome, descricao, localId) {
+                this.id = id;
+                this.nome = nome;
+                this.descricao = descricao;
+                this.localId = localId;
+                this.coletada = false;
+            }
+        }
+
+        class Suspeito {
+            constructor(id, nome, ocupacao, alibi, foto, ehOCulpado, segredo, perguntas) {
+                this.id = id;
+                this.nome = nome;
+                this.ocupacao = ocupacao;
+                this.alibi = alibi;
+                this.foto = foto;
+                this.ehOCulpado = ehOCulpado;
+                this.segredo = segredo;
+                this.perguntas = perguntas; // Array de objetos { p: pergunta, r: resposta, pistaRelacionada: string }
+            }
+        }
+
+        class Local {
+            constructor(id, nome, descricao, imagemIcone, pistas) {
+                this.id = id;
+                this.nome = nome;
+                this.descricao = descricao;
+                this.imagemIcone = imagemIcone;
+                this.pistas = pistas; // Array de instâncias de Pista
+            }
+        }
+
+        // Estado do Jogo
+        const Jogo = {
+            locais: [],
+            suspeitos: [],
+            inventarioPistas: [],
+            localAtual: null,
+            suspeitoInterrogado: null,
+
+            inicializar() {
+                // Criar Pistas
+                const pistaRelogio = new Pista("relogio", "Relógio de Bolso Parado", "O relógio de ouro de Lorde Roderick parou exatamente às 22:15 devido a um forte impacto.", "escritorio");
+                const pistaPegada = new Pista("pegada", "Pegada de Lama", "Uma marca de lama tamanho 42 vindo da janela da estufa em direção ao escritório.", "escritorio");
+                const pistaFrasco = new Pista("frasco", "Frasco de Arseníaco Vazio", "Encontrado escondido na estufa atrás das orquídeas. Falta metade do veneno.", "estufa");
+                const pistaTestamento = new Pista("testamento", "Testamento Alterado", "Um documento não assinado na biblioteca deixando toda a fortuna para caridade, deserdando os parentes.", "biblioteca");
+                const pistaXicara = new Pista("xicara", "Xícara com Resíduo", "Xícara de chá com odor amargo de amêndoas sobre a mesa de jantar.", "jantar");
+                const pistaBilhete = new Pista("bilhete", "Bilhete Ameaçador", "Uma carta na biblioteca dizendo: 'Pague sua dívida até esta noite ou arcará com as consequências'. Assinado: C.H.", "biblioteca");
+
+                // Criar Locais
+                this.locais = [
+                    new Local("escritorio", "Escritório Principal", "Cena principal do crime. O corpo foi encontrado na poltrona do escritório.", "briefcase", [pistaRelogio, pistaPegada]),
+                    new Local("biblioteca", "Biblioteca da Mansão", "Local silencioso repleto de documentos antigos, livros valiosos e correspondências.", "book", [pistaTestamento, pistaBilhete]),
+                    new Local("estufa", "Estufa de Plantas", "Um jardim de inverno úmido com plantas raras e ferramentas de jardinagem.", "flower2", [pistaFrasco]),
+                    new Local("jantar", "Sala de Jantar", "Onde o jantar formal foi servido aos convidados às 20:30.", "utensils", [pistaXicara])
+                ];
+
+                // Fotos estilizadas da API Unsplash (retratos misteriosos em tom escuro)
+                this.suspeitos = [
+                    new Suspeito(
+                        "beatrice",
+                        "Lady Beatrice Blackwood",
+                        "Herdeira / Sobrinha",
+                        "Estava lendo em seus aposentos no 2º andar desde às 21:30.",
+                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+                        false,
+                        "Estava falida por causa de jogos de azar.",
+                        [
+                            { p: "Onde você estava às 22:15?", r: "Eu estava em meu quarto lendo meu livro. Ouvi um barulho seco, mas pensei ser um trovão." },
+                            { p: "Qual era sua relação com Lorde Roderick?", r: "Ele era meu tio. É verdade que discutimos sobre finanças, mas eu jamais o machucaria." }
+                        ]
+                    ),
+                    new Suspeito(
+                        "jean",
+                        "Mordomo Jean Luc",
+                        "Mordomo Chefe",
+                        "Serviu o chá das 22:00 e foi para a cozinha lavar a louça.",
+                        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+                        true, // Culpado!
+                        "Usava sapatos tamanho 42 e tinha acesso aos venenos da estufa.",
+                        [
+                            { p: "O que você fez após servir o chá?", r: "Voltei para a cozinha para organizar os pratos de prata. Não ouvi nada de incomum." },
+                            { p: "Notei lama em seus sapatos...", r: "Ah... eu tive que ir até a estufa buscar ervas frescas mais cedo. A tempestade sujou tudo." },
+                            { p: "Sabe algo sobre o veneno na estufa?", r: "Como mordomo, cuido de pragas na estufa. Mas aquele frasco deveria estar trancado..." }
+                        ]
+                    ),
+                    new Suspeito(
+                        "eleanor",
+                        "Dra. Eleanor Vance",
+                        "Médica Particular",
+                        "Examinava amostras de medicamentos no laboratório da casa.",
+                        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+                        false,
+                        "Sabia que o Lorde tinha uma doença terminal.",
+                        [
+                            { p: "Como estava a saúde do Lorde?", r: "Ele tinha um coração fraco. Mas os sintomas que vi indicam um colapso repentino e não natural." },
+                            { p: "Você esteve no escritório esta noite?", r: "Apenas às 21:00 para entregar seus remédios diários de rotina." }
+                        ]
+                    ),
+                    new Suspeito(
+                        "hastings",
+                        "Capitão Arthur Hastings",
+                        "Amigo de Exército / Convidado",
+                        "Estava na biblioteca degustando uísque e charuto.",
+                        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+                        false,
+                        "Assinou o bilhete cobrando uma dívida antiga do Lorde.",
+                        [
+                            { p: "Sobre o bilhete de cobrança 'C.H.'...", r: "Tudo bem, admito! Roderick me devia uma fortuna de uma aposta militar antiga. Fui cobrá-lo às 21:45, mas ele me expulsou do escritório ainda vivo!" },
+                            { p: "Onde foi depois disso?", r: "Fui furioso para a biblioteca beber algo para me acalmar." }
+                        ]
+                    ),
+                    new Suspeito(
+                        "sophia",
+                        "Sophia Thorne",
+                        "Governanta",
+                        "Limpava a sala de jantar e conferia as trancas das portas.",
+                        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80",
+                        false,
+                        "Viu Jean Luc caminhando apresado perto do escritório às 22:10.",
+                        [
+                            { p: "Viu alguma movimentação suspeita?", r: "Sim... por volta das 22:10 vi o Sr. Jean Luc saindo apressado dos corredores do escritório em direção aos fundos." },
+                            { p: "Onde estava às 22:15?", r: "Terminando de arrumar os cálices na sala de jantar." }
+                        ]
+                    )
+                ];
+
+                this.renderizarLocais();
+                this.renderizarSuspeitos();
+                this.popularSelectAcusado();
+            },
+
+            renderizarLocais() {
+                const container = document.getElementById('grid-locais');
+                container.innerHTML = this.locais.map(loc => `
+                    <div onclick="Jogo.selecionarLocal('${loc.id}')" class="noir-card p-5 rounded-xl cursor-pointer flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="p-2.5 bg-noir-800 text-noir-gold rounded-lg border border-noir-gold/20">
+                                    <i data-lucide="${loc.imagemIcone}" class="w-6 h-6"></i>
+                                </span>
+                                <span class="text-xs bg-noir-700 text-gray-300 px-2 py-1 rounded-full border border-noir-600">
+                                    ${loc.pistas.filter(p => p.coletada).length}/${loc.pistas.length} Pistas
+                                </span>
+                            </div>
+                            <h4 class="font-cinzel text-lg font-bold text-noir-gold">${loc.nome}</h4>
+                            <p class="text-xs text-gray-400 mt-1 line-clamp-2">${loc.descricao}</p>
+                        </div>
+                        <button class="mt-4 text-xs font-cinzel font-semibold text-noir-gold flex items-center gap-1 hover:underline">
+                            Investigar Cômodo <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            },
+
+            selecionarLocal(id) {
+                this.localAtual = this.locais.find(l => l.id === id);
+                const painel = document.getElementById('painel-local');
+                document.getElementById('local-titulo').innerText = this.localAtual.nome;
+                document.getElementById('local-subtitulo').innerText = `Cômodo da Mansão Blackwood`;
+                document.getElementById('local-descricao').innerText = this.localAtual.descricao;
+
+                const containerPistas = document.getElementById('lista-pistas-local');
+                containerPistas.innerHTML = this.localAtual.pistas.map(pista => `
+                    <div class="p-3 bg-noir-800 rounded-lg border border-noir-600 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="${pista.coletada ? 'check-circle-2' : 'help-circle'}" class="w-5 h-5 ${pista.coletada ? 'text-green-500' : 'text-noir-gold'}"></i>
+                            <div>
+                                <h5 class="text-sm font-semibold text-gray-200">${pista.nome}</h5>
+                                <p class="text-xs text-gray-400">${pista.coletada ? pista.descricao : 'Objeto suspeito não examinado...'}</p>
+                            </div>
+                        </div>
+                        ${!pista.coletada ? `
+                            <button onclick="Jogo.coletarPista('${pista.id}')" class="px-3 py-1.5 bg-noir-gold text-noir-900 text-xs font-cinzel font-bold rounded hover:bg-yellow-500 transition-colors">
+                                Coletar
+                            </button>
+                        ` : `
+                            <span class="text-[11px] text-green-400 font-cinzel">No Caderno</span>
+                        `}
+                    </div>
+                `).join('');
+
+                painel.classList.remove('hidden');
+                lucide.createIcons();
+                painel.scrollIntoView({ behavior: 'smooth' });
+            },
+
+            coletarPista(pistaId) {
+                const pista = this.localAtual.pistas.find(p => p.id === pistaId);
+                if (pista && !pista.coletada) {
+                    pista.coletada = true;
+                    this.inventarioPistas.push(pista);
+                    this.atualizarCaderno();
+                    this.selecionarLocal(this.localAtual.id);
+                    this.renderizarLocais();
+                    
+                    // Notificação sutil
+                    const badge = document.getElementById('badge-pistas');
+                    badge.classList.remove('hidden');
+                    badge.innerText = this.inventarioPistas.length;
+                }
+            },
+
+            atualizarCaderno() {
+                const container = document.getElementById('container-caderno-pistas');
+                const vazio = document.getElementById('caderno-vazio');
+                const contador = document.getElementById('contador-pistas');
+
+                contador.innerText = `${this.inventarioPistas.length} pistas coletadas`;
+
+                if (this.inventarioPistas.length > 0) {
+                    vazio.classList.add('hidden');
+                    container.innerHTML = this.inventarioPistas.map(p => `
+                        <div class="p-4 bg-noir-900/80 rounded-lg border border-noir-gold/30 space-y-1">
+                            <div class="flex items-center gap-2 text-noir-gold font-typewriter font-bold text-sm">
+                                <i data-lucide="bookmark" class="w-4 h-4"></i> ${p.nome}
+                            </div>
+                            <p class="text-xs text-noir-paper font-typewriter leading-relaxed">${p.descricao}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    vazio.classList.remove('hidden');
+                    container.innerHTML = '';
+                }
+                lucide.createIcons();
+            },
+
+            renderizarSuspeitos() {
+                const container = document.getElementById('grid-suspeitos');
+                container.innerHTML = this.suspeitos.map(s => `
+                    <div class="noir-card rounded-xl overflow-hidden flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 overflow-hidden bg-noir-900">
+                                <img src="${s.foto}" alt="${s.nome}" class="w-full h-full object-cover opacity-85 hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-noir-900 via-transparent to-transparent"></div>
+                                <span class="absolute bottom-2 left-3 font-cinzel text-xs text-noir-gold bg-noir-900/80 px-2 py-0.5 rounded border border-noir-gold/30">
+                                    ${s.ocupacao}
+                                </span>
+                            </div>
+                            <div class="p-5 space-y-3">
+                                <h4 class="font-cinzel text-lg font-bold text-gray-100">${s.nome}</h4>
+                                <div class="bg-noir-800 p-3 rounded-lg border border-noir-600">
+                                    <span class="text-[11px] font-cinzel uppercase text-noir-gold block mb-1">Álibi Declarado:</span>
+                                    <p class="text-xs text-gray-300 italic">"${s.alibi}"</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <button onclick="Jogo.abrirInterrogatorio('${s.id}')" class="w-full py-2.5 bg-noir-700 hover:bg-noir-600 border border-noir-gold/40 text-noir-gold font-cinzel text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="message-square" class="w-4 h-4"></i> Interrogar Suspeito
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            },
+
+            abrirInterrogatorio(suspeitoId) {
+                this.suspeitoInterrogado = this.suspeitos.find(s => s.id === suspeitoId);
+                const modal = document.getElementById('modal-interrogatorio');
+                
+                document.getElementById('interrogatorio-foto').src = this.suspeitoInterrogado.foto;
+                document.getElementById('interrogatorio-nome').innerText = this.suspeitoInterrogado.nome;
+                document.getElementById('interrogatorio-cargo').innerText = this.suspeitoInterrogado.ocupacao;
+
+                const historico = document.getElementById('historico-dialogo');
+                historico.innerHTML = `
+                    <div class="p-3 bg-noir-900/70 rounded-lg text-xs text-gray-300 italic border-l-2 border-noir-gold">
+                        Você sentou-se à frente de <strong>${this.suspeitoInterrogado.nome}</strong> na sala de visitas. Faça suas perguntas com cautela.
+                    </div>
+                `;
+
+                const containerPerguntas = document.getElementById('opcoes-perguntas');
+                containerPerguntas.innerHTML = this.suspeitoInterrogado.perguntas.map((q, idx) => `
+                    <button onclick="Jogo.fazerPergunta(${idx})" class="w-full text-left p-2.5 bg-noir-800 hover:bg-noir-700 text-xs text-gray-200 rounded border border-noir-600 font-sans transition-colors flex items-center gap-2">
+                        <i data-lucide="help-circle" class="w-4 h-4 text-noir-gold flex-shrink-0"></i>
+                        <span>"${q.p}"</span>
+                    </button>
+                `).join('');
+
+                modal.classList.remove('hidden');
+                lucide.createIcons();
+            },
+
+            fazerPergunta(indexPergunta) {
+                const q = this.suspeitoInterrogado.perguntas[indexPergunta];
+                const historico = document.getElementById('historico-dialogo');
+
+                historico.innerHTML += `
+                    <div class="text-right">
+                        <div class="inline-block p-3 bg-noir-gold/20 text-noir-gold rounded-lg text-xs text-left max-w-[85%] border border-noir-gold/30">
+                            <strong>Você:</strong> ${q.p}
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <div class="inline-block p-3 bg-noir-900 text-gray-200 rounded-lg text-xs text-left max-w-[85%] border border-noir-600">
+                            <strong>${this.suspeitoInterrogado.nome}:</strong> "${q.r}"
+                        </div>
+                    </div>
+                `;
+
+                historico.scrollTop = historico.scrollHeight;
+            },
+
+            popularSelectAcusado() {
+                const select = document.getElementById('select-acusado');
+                select.innerHTML = '<option value="">-- Escolha um Suspeito --</option>' + 
+                    this.suspeitos.map(s => `<option value="${s.id}">${s.nome} (${s.ocupacao})</option>`).join('');
+            }
+        };
+
+        // Funções Globais de Interface
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-noir-gold', 'text-noir-900', 'shadow-lg');
+                btn.classList.add('text-gray-400');
+            });
+
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('bg-noir-gold', 'text-noir-900', 'shadow-lg');
+            activeBtn.classList.remove('text-gray-400');
+
+            if(tabId === 'pistas') {
+                document.getElementById('badge-pistas').classList.add('hidden');
+            }
+        }
+
+        function fecharPainelLocal() {
+            document.getElementById('painel-local').classList.add('hidden');
+        }
+
+        function fecharModalInterrogatorio() {
+            document.getElementById('modal-interrogatorio').classList.add('hidden');
+        }
+
+        function confirmarAcusacao() {
+            const acusadoId = document.getElementById('select-acusado').value;
+            if (!acusadoId) {
+                alert("Por favor, selecione um suspeito antes de fazer a acusação!");
+                return;
+            }
+
+            const acusado = Jogo.suspeitos.find(s => s.id === acusadoId);
+            const modalVeredito = document.getElementById('modal-veredito');
+            const iconeContainer = document.getElementById('veredito-icone-container');
+            const titulo = document.getElementById('veredito-titulo');
+            const mensagem = document.getElementById('veredito-mensagem');
+
+            if (acusado.ehOCulpado) {
+                iconeContainer.innerHTML = `<i data-lucide="award" class="w-16 h-16 text-yellow-500 mx-auto"></i>`;
+                titulo.className = "font-cinzel text-3xl font-bold tracking-wider text-green-400";
+                titulo.innerText = "CASO RESOLVIDO! CASO ENCERADO.";
+                mensagem.innerHTML = `
+                    <p><strong>Parabéns, Detetive!</strong> Sua dedução foi impecável.</p>
+                    <p><strong>O Culpado:</strong> ${acusado.nome} (${acusado.ocupacao}).</p>
+                    <p><strong>Como o crime ocorreu:</strong> Jean Luc adulterou a xícara de chá de Lorde Roderick com o veneno de arseníaco pego na estufa. Após colocar o veneno, ele entrou no escritório pela janela da estufa às 22:15 para forjar o roubo, deixando a pegada de lama tamanho 42 e quebrando o relógio durante a luta. Seu objetivo era impedir que o Lorde alterasse o testamento na biblioteca.</p>
+                `;
+            } else {
+                iconeContainer.innerHTML = `<i data-lucide="x-circle" class="w-16 h-16 text-noir-crimson mx-auto"></i>`;
+                titulo.className = "font-cinzel text-3xl font-bold tracking-wider text-noir-crimson";
+                titulo.innerText = "ACUSAÇÃO INCORRETA!";
+                mensagem.innerHTML = `
+                    <p><strong>Você falhou na investigação...</strong></p>
+                    <p>Você acusou <strong>${acusado.nome}</strong>, mas esta pessoa era inocente e possuía um álibi verdadeiro.</p>
+                    <p>Enquanto um inocente foi preso, o verdadeiro culpado, <strong>Mordomo Jean Luc</strong>, escapou da mansão levando o testamento e a fortuna!</p>
+                `;
+            }
+
+            modalVeredito.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function reiniciarJogo() {
+            document.getElementById('modal-veredito').classList.add('hidden');
+            document.getElementById('select-acusado').value = "";
+            Jogo.inicializar();
+            switchTab('locais');
+        }
+
+        // Inicializar aplicação ao carregar
+        window.onload = function() {
+            Jogo.inicializar();
+        };
+    </script>
+</body>
+</html>
